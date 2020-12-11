@@ -1,6 +1,7 @@
 import tkinter
 import os
 from tkinter import *
+from tkinter import messagebox
 from tkinter.messagebox import *
 from tkinter.filedialog import *
 from tkinter import simpledialog  
@@ -12,15 +13,15 @@ import socket
 sys.setrecursionlimit(10**6)
 
 def calculate(command):
-	host = '34.90.102.225'
+	#host = '34.90.102.225'
+	host = '127.0.0.1'
 	port = 8080
 	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
 	s.connect((host,port))
 	while True: 
   
         # command sent to server
-			#message = simpledialog.askstring(title="Client",prompt="Enter the number of points to take : ")
-        #message = input("Enter the Number of points to take: ")
+			
 		s.send(bytes(command, 'utf-8'))
 	  
 		# recieved response
@@ -133,21 +134,22 @@ class RPC:
 	def __command(self):
 		command = simpledialog.askstring("Command","Enter the number of points to take ")
 		command_output = "Output"
-		if command is not None:
-			"""Code for output from socket here"""
-			"""
-			Insert all code required to be put in main here
-			This part contains code to send the variable 'command' to the socket
-			On receiving the output, it is stored in 'command_output'
-			"""
-			
-			command_output = calculate(command)	
-			
-			self.__thisTextArea.delete(1.0,END)
-			#command_output = "The Area is: "+str(area)+"\nThe Circumference is: "+str(circum)+"\n"
-			self.__thisTextArea.insert(1.0,command_output)
+		print(command)
+		if command !="":
+			if (int(command) > 0):
+				command_output = calculate(command)	
+				self.__thisTextArea.delete(1.0,END)
+				#command_output = "The Area is: "+str(area)+"\nThe Circumference is: "+str(circum)+"\n"
+				self.__thisTextArea.insert(1.0,command_output)
 	
-		op_continue = messagebox.askyesno("Continue Operations","Do you want to continue operations?")
+				op_continue = messagebox.askyesno("Continue Operations","Do you want to continue operations?")
+			else:
+				op_continue = messagebox.askyesno(
+				"Continue Operations", "INVALID INPUT\nDo you want to continue operations?")
+		else:
+			op_continue = messagebox.askyesno(
+				"Continue Operations", "INVALID INPUT\nDo you want to continue operations?")
+
 		if op_continue:
 			self.__command()
 		else:
